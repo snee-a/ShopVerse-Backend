@@ -1,127 +1,171 @@
-***In this file I will be documenting the complete steps of setting up backend of ShopVerse***
+🛠️ ShopVerse Backend Setup (Express + MongoDB)
+This guide walks you through the complete steps for setting up the backend of the ShopVerse project using Express.js and MongoDB.
 
-## Steps-
- Create a folder ShopVerse-Backend . Open it with VS code.
-    Run this command in terminal -
-    ``` npm init -y``` 
-    (install dependencies)
-
- then -
-
-```js
-    npm install express cors dotenv mongoose bcryptjs jsonwebtoken```
-
-    express-create routes and server
-    cors - connect backend and frontend
-    dotenv- keep passwords and API safe
-    mongoose - connect to MongoDB
-    bcryptjs: encrypt passwords
-    jsonwebtoken: for login token
-    
-if you dont already have nodemon then this -
-```js
- npm install --save-dev nodemon```
-
-Update this in package.json 
-```"scripts": {
-       "start": "node index.js",
-        "dev": "nodemon index.js"
-    }```
-
-Now create a file index.js using - touch index.js or manually
-
-Now in your index.js -
-  ```js
-  //import modules
-        const express=require("express");
-        const cors=require("cors");
-        const mongoose=require("mongoose");
-        require("dotenv").config();
-
-    //initialise the app
-        const app=express();
-
-    //middlewares
-        app.use(express.json());//this allows to get jSOn data
-        app.use(cors());//connect frontend and backend
-
-    //test route- 
-        app.get("/",(req,res)=>{
-            res.send("Hey!");
-        });
-
-    //connect to server
-        let PORT=process.env.PORT || 5000;
-        app.listen(PORT,()=>{
-            console.log(`App is listening at the port ${PORT}`);
-        })```
-
-Now Complete MongoDb connecting process-
-    Create a MongoDB Atlas account at https://www.mongodb.com/cloud/atlas.
-    Create a new project named ShopVerse.
-    Inside the project, create a new Shared Cluster.
-    Choose any cloud provider and region (AWS/Mumbai preferred for India).
-    Name your cluster (e.g., Cluster0) and create it.
-    Go to Database > Database Access, click "Add New Database User".
-    Set username as pandeysneha953 and choose a secure password.
-    Set Authentication Method as SCRAM (default).
-    Assign role: atlasAdmin@admin (or just readWriteAnyDatabase for safety).
-    Save the user.
-    Go to Network Access and click “Add Current IP Address” to whitelist your system’s IP.
-    Once IP is added, go to Database > Connect > Drivers tab.
-    Copy the Node.js connection string (URI) starting with mongodb+srv://....
-    Replace <password> with your actual password (URL encoded if it has special characters).
-    Add this URI to your .env file in the backend project:
-
-      ```js
-    MONGO_URL=mongodb+srv://pandeysneha953:<your-encoded-password>@cluster0.xxxxx.mongodb.net/shopverse?retryWrites=true&w=majority
-        PORT=5000```
-
-Now create a folder config inside this create db.js
-   ```js
-     // Import mongoose library
-        const mongoose = require("mongoose");
-
-        // Create async function to connect to MongoDB
-        const connectDB = async () => {
-        try {
-            // Connect to MongoDB using the URI from environment variables
-            const conn = await mongoose.connect(process.env.MONGO_URL, {
-            useNewUrlParser: true,        // Use new URL parser (recommended)
-            useUnifiedTopology: true,     // Use new server discovery and monitoring engine
-            });
-
-            // Log success message with host info
-            console.log(`MongoDB Connected: ${conn.connection.host}`);
-        } catch (error) {
-            // If connection fails, log error and exit process
-            console.error(`Error connecting to MongoDB: ${error.message}`);
-            process.exit(1); // Exit with failure code
-        }
-        };
-
-        // Export the connectDB function to use in index.js
-        module.exports = connectDB;
+✅ Step 1: Initialize the Backend Project
+Create a new folder:
+```
+ShopVerse-Backend
 ```
 
-Inside the index.js 
-call connectDB function after importing the modules:-
- ```js
-   connectDB();```
+Open this folder in VS Code.
 
-This basic setup is completed Backend setup done and mongoDB connected now we will work on frontend then come back to it again .
+Initialize package.json:
+```js
+npm init -y
+```
 
-Now pushing this to github
-   ```js
-    git init
-    git remote add origin https://github.com/username/reponame.git
-    create a file .gitignore add this to it 
-        node_modules
-        .env
-    git add .
-    git commit -m "Initial backend setup with Express and MongoDB connection"
-    git branch -M main
-    git push -u origin main```
+Install required dependencies:
+```
+npm install express cors dotenv mongoose bcryptjs jsonwebtoken
+```
 
+express: Web framework
 
+cors: Allow frontend-backend communication
 
+dotenv: Load secret environment variables
+
+mongoose: Connect and work with MongoDB
+
+bcryptjs: Encrypt passwords
+
+jsonwebtoken: Handle login authentication tokens
+
+(Optional) Install nodemon for auto-restarting server during development:
+```
+npm install --save-dev nodemon
+```
+
+Update package.json scripts:
+```
+"scripts": {
+"start": "node index.js",
+"dev": "nodemon index.js"
+}
+```
+
+✅ Step 2: Create Entry File
+Create index.js file (either manually or using terminal):
+```
+touch index.js
+```
+
+Paste the following basic server setup code:
+
+```
+// Import modules
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+require("dotenv").config();
+
+// Connect DB
+const connectDB = require("./config/db");
+
+// Initialize app
+const app = express();
+
+// Middlewares
+app.use(express.json());
+app.use(cors());
+
+// Test route
+app.get("/", (req, res) => {
+res.send("Hey!");
+});
+
+// Connect to MongoDB
+connectDB();
+
+// Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+console.log(Server is running on port ${PORT});
+});
+```
+
+✅ Step 3: Setup MongoDB Atlas
+Visit: https://www.mongodb.com/cloud/atlas and create an account.
+
+Create a new project: ShopVerse
+
+Create a Shared Cluster → AWS (Mumbai preferred)
+
+Name your cluster (e.g. Cluster0)
+
+Create a database user:
+
+Username: pandeysneha953
+
+Password: (choose a secure one)
+
+Role: readWriteAnyDatabase or atlasAdmin
+
+Go to Network Access → Click "Add Current IP Address"
+
+Go to Database → Connect → Choose Drivers
+
+Copy the connection string:
+```
+mongodb+srv://pandeysneha953:<password>@cluster0.xxxxx.mongodb.net/shopverse?retryWrites=true&w=majority
+```
+
+Add a .env file in your root folder:
+```
+MONGO_URL=mongodb+srv://pandeysneha953:<your-encoded-password>@cluster0.xxxxx.mongodb.net/shopverse?retryWrites=true&w=majority
+PORT=5000
+```
+
+✅ Step 4: Create Folder Structure
+Inside your root folder, create this structure:
+
+arduino
+Copy
+Edit
+ShopVerse-Backend/
+├── config/
+│   └── db.js
+├── index.js
+└── .env
+✅ Step 5: MongoDB Connection File
+Inside config/db.js, add the following code:
+
+```
+const mongoose = require("mongoose");
+
+const connectDB = async () => {
+try {
+await mongoose.connect(process.env.MONGO_URL);
+console.log("MongoDB Connected");
+} catch (error) {
+console.error("MongoDB connection failed:", error.message);
+process.exit(1);
+}
+};
+
+module.exports = connectDB;
+```
+
+✅ Step 6: Run the Server
+Start the backend in development mode:
+
+```
+npm run dev
+```
+
+Visit in browser:
+http://localhost:5000
+
+You should see:
+Hey!
+
+And in terminal:
+
+Server is running on port 5000
+MongoDB Connected
+✅ Final Notes
+Don't forget to add .env to .gitignore
+
+Make sure MongoDB URI password is URL encoded if it contains special characters
+
+Your backend is now ready to create models, routes, and APIs 🎉
