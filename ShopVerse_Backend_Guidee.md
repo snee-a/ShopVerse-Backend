@@ -9,7 +9,7 @@
  then -
 
 ```js
-    npm install express cors dotenv mongoose bcryptjs jsonwebtoken
+    npm install express cors dotenv mongoose bcryptjs jsonwebtoken```
 
     express-create routes and server
     cors - connect backend and frontend
@@ -18,18 +18,21 @@
     bcryptjs: encrypt passwords
     jsonwebtoken: for login token
     
-if you dont already have nodemon then this - npm install --save-dev nodemon
+if you dont already have nodemon then this -
+```js
+ npm install --save-dev nodemon```
 
 Update this in package.json 
-```"scripts": {```
-     ```   "start": "node index.js",```
-      ```  "dev": "nodemon index.js"```
- ```   }```
+```"scripts": {
+       "start": "node index.js",
+        "dev": "nodemon index.js"
+    }```
 
 Now create a file index.js using - touch index.js or manually
 
 Now in your index.js -
-    //import modules
+  ```js
+  //import modules
         const express=require("express");
         const cors=require("cors");
         const mongoose=require("mongoose");
@@ -51,7 +54,7 @@ Now in your index.js -
         let PORT=process.env.PORT || 5000;
         app.listen(PORT,()=>{
             console.log(`App is listening at the port ${PORT}`);
-        })
+        })```
 
 Now Complete MongoDb connecting process-
     Create a MongoDB Atlas account at https://www.mongodb.com/cloud/atlas.
@@ -70,11 +73,13 @@ Now Complete MongoDb connecting process-
     Replace <password> with your actual password (URL encoded if it has special characters).
     Add this URI to your .env file in the backend project:
 
-        MONGO_URL=mongodb+srv://pandeysneha953:<your-encoded-password>@cluster0.xxxxx.mongodb.net/shopverse?retryWrites=true&w=majority
-        PORT=5000
+      ```js
+    MONGO_URL=mongodb+srv://pandeysneha953:<your-encoded-password>@cluster0.xxxxx.mongodb.net/shopverse?retryWrites=true&w=majority
+        PORT=5000```
 
 Now create a folder config inside this create db.js
-        // Import mongoose library
+   ```js
+     // Import mongoose library
         const mongoose = require("mongoose");
 
         // Create async function to connect to MongoDB
@@ -97,14 +102,17 @@ Now create a folder config inside this create db.js
 
         // Export the connectDB function to use in index.js
         module.exports = connectDB;
+```
 
 Inside the index.js 
 call connectDB function after importing the modules:-
-    connectDB();
+ ```js
+   connectDB();```
 
 This basic setup is completed Backend setup done and mongoDB connected now we will work on frontend then come back to it again .
 
 Now pushing this to github
+   ```js
     git init
     git remote add origin https://github.com/username/reponame.git
     create a file .gitignore add this to it 
@@ -113,7 +121,7 @@ Now pushing this to github
     git add .
     git commit -m "Initial backend setup with Express and MongoDB connection"
     git branch -M main
-    git push -u origin main
+    git push -u origin main```
 
 
 
