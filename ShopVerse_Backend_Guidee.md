@@ -10,7 +10,7 @@
 
 ```js
     npm install express cors dotenv mongoose bcryptjs jsonwebtoken
-```
+
     express-create routes and server
     cors - connect backend and frontend
     dotenv- keep passwords and API safe
